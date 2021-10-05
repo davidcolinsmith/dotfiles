@@ -1,12 +1,17 @@
 syntax on               " enable syntax highlighting
 set cursorline          " highlight the current line
 " set background=dark   " darker color scheme
-" set ruler             " show line number in bar
+set ruler             " show line number in bar
 set nobackup            " don't create pointless backup files; Use VCS instead
+set backspace=2		" backspace deletes like most programs in insert mode
+set incsearch		" incremental searching
+set laststatus=2	" always display status line
+set autowrite		" automatically :write before running commands
 set autoread            " watch for file changes
 set number              " show line numbers
 set showcmd             " show selection metadata
 set showmode            " show INSERT, VISUAL, etc. mode
+set nomodeline
 set showmatch           " show matching brackets
 set autoindent smartindent  " auto/smart indent
 set smarttab            " better backspace and tab functionality

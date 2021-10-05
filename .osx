@@ -1,25 +1,4 @@
-#!/usr/bin/env bash
-
-# Mac OS X configuration
-#
-# This configuration applies to the latest version of macOS (currently 11.3),
-# and sets up preferences and configurations for all the built-in services and
-# apps. Third-party app config should be done elsewhere.
-#
-# Options:
-#   --no-restart: Don't restart any apps or services after running the script.
-#
-# If you want to figure out what default needs changing, do the following:
-#
-#   1. `cd /tmp`
-#   2. Store current defaults in file: `defaults read > before`
-#   3. Make a change to your system.
-#   4. Store new defaults in file: `defaults read > after`
-#   5. Diff the files: `diff before after`
-#
-# @see: http://secrets.blacktree.com/?showapp=com.apple.finder
-# @see: https://github.com/herrbischoff/awesome-macos-command-line
-#
+#!/usr/bin/env bash # Mac OS X configuration # # This configuration applies to the latest version of macOS (currently 11.3), # and sets up preferences and configurations for all the built-in services and # apps. Third-party app config should be done elsewhere.  # # Options: #   --no-restart: Don't restart any apps or services after running the script.  # # If you want to figure out what default needs changing, do the following: # #   1. `cd /tmp` #   2. Store current defaults in file: `defaults read > before` #   3. Make a change to your system.  #   4. Store new defaults in file: `defaults read > after` #   5. Diff the files: `diff before after` # # @see: http://secrets.blacktree.com/?showapp=com.apple.finder # @see: https://github.com/herrbischoff/awesome-macos-command-line #
 # @author Jeff Geerling
 
 # Warn that some commands will not be run if the script is not run as root.
@@ -82,6 +61,13 @@ defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 # Set a blazingly fast keyboard repeat rate, and make it happen more quickly.
 defaults write NSGlobalDomain InitialKeyRepeat -int 20
 defaults write NSGlobalDomain KeyRepeat -int 1
+
+# Remap Capslock key to escap
+hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x700000029}]}'
+# defaults  write -g com.apple.keyboard.modifiermapping.1118-219-0 -array-add '<dict><key>HIDKeyboardModifierMappingDst</key><integer>-1</integer><key>HIDKeyboardModifierMappingSrc</key><integer>0</integer></dict>'
+# Das Keyboard id: 9456-320-0
+#      | |     "idProduct" = 320
+#      | |     "idVendor" = 9456
 
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
