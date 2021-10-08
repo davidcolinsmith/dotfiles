@@ -1,0 +1,116 @@
+#OktaAWSCLI
+if [[ -f "$HOME/.okta/bash_functions" ]]; then
+    . "$HOME/.okta/bash_functions"
+fi
+if [[ -d "$HOME/.okta/bin" && ":$PATH:" != *":$HOME/.okta/bin:"* ]]; then
+    PATH="$HOME/.okta/bin:$PATH"
+fi
+
+# Consume assumed role or session token creds from AWS CLI into ENV vars
+aws_consume_creds() {
+  while IFS= read -r line; do
+    # piping the sts assumed creds to jq may be a more elegant solution, but it is far less portable
+    echo $line | /usr/bin/grep -isq 'accesskeyid' && export AWS_ACCESS_KEY_ID=`echo $line | awk -F'"' '{print $4}'`
+    echo $line | /usr/bin/grep -isq 'secretaccesskey' && export AWS_SECRET_ACCESS_KEY=`echo $line | awk -F'"' '{print $4}'`
+    echo $line | /usr/bin/grep -isq 'sessiontoken' && export AWS_SESSION_TOKEN=`echo $line | awk -F'"' '{print $4}'`
+    echo $line | /usr/bin/grep -isq 'expiration' && export AWS_SESSION_EXPIRATION=`echo $line | awk -F'"' '{print $4}'`
+  done
+}
+
+# Unsets ENV vars specific to AWS creds
+unset_aws_creds() {
+  unset AWS_ACCESS_KEY_ID
+  unset AWS_SECRET_ACCESS_KEY
+  unset AWS_SESSION_TOKEN
+  unset AWS_SECURITY_TOKEN
+  unset AWS_SESSION_EXPIRATION
+}
+
+# Creates an STS session and consumes assumed creds into AWS ENV vars
+# import os
+aws_mfa_session() {
+  usage() {
+    echo "Usage: aws_mfa_session -p {AWS_PROFILE} [-d {session_duration_in_seconds}] [-h]"
+  }
+
+  declare -i duration=43200
+  declare mfa_code=''
+  declare principal=''
+  declare profile=''
+  declare serial_no=''
+
+  while getopts 'hp:d:' opt; do
+    case "${opt}" in
+      h )
+        usage
+        return 0
+        ;;
+      p )
+        profile=$OPTARG
+        ;;
+      d )
+        duration=$OPTARG
+        if ! echo $duration | grep -Esq '^[0-9]{3,5}$'; then usage; return 3; fi
+        ;;
+      \? )
+        echo "Invalid option: $opt" 1>&2
+        usage; return 1
+        ;;
+    esac
+  done
+  shift $((OPTIND -1))
+
+  if [[ "$profile" == "" ]]; then usage; return 2; fi
+
+  while [[ "$mfa_code" == "" ]]; do
+    echo -n "Generate an MFA code and enter it: "
+    read input
+    if echo $input | grep -Esq "^[0-9]{6}$"; then
+      mfa_code=$input
+    else
+      echo "ERROR: Invalid response: \"$input\".  MFA Code must be a 6 digit string."
+    fi
+  done
+
+  unset_aws_creds
+  export AWS_REGION=`aws --profile $profile configure get region`
+  principal=`aws --region $AWS_REGION --profile $profile sts get-caller-identity | grep '\"Arn\"' | awk -F\" '{print $4}'`
+  serial_no=`echo $principal | sed 's/user/mfa/'`
+  aws --region $AWS_REGION --profile $profile sts get-session-token --duration-seconds $duration --serial-number $serial_no --token-code $mfa_code | aws_consume_creds
+  echo "assumed the following identity..."
+  AWS_PAGER="" aws --region $AWS_REGION sts get-caller-identity
+}
+#
+# aws cli helpers
+#
+aws_get_instances_name() {
+  # TODO: add proper usage
+  # usage() {
+  #   echo "This function requires a single argument of AWS region value"
+  # }
+  # if [[$1 == ""]; then usage; return 2; fi
+  instance_names=$(aws ec2 describe-instances --region $AWS_REGION --query 'Reservations[*].Instances[*].Tags[?Key==`Name`].Value[]' --output text)
+  account_short_name=$(aws iam list-account-aliases --query 'AccountAliases' --output text)
+  echo "Instance Names in Account $account_short_name, $AWS_REGION\n"
+  echo $instance_names
+}
+
+aws_ssm_by_name() {
+  instance_id=$(aws ec2 describe-instances --region $AWS_REGION --query 'Reservations[?not_null(Instances[?Tags[?Value==`'"$1"'`]])].Instances[0].InstanceId' --output text)
+  echo "Connecting to Instance ID: $instance_id"
+  aws ssm start-session --target $instance_id
+}
+
+
+function aws_configure_sso_profile () {
+echo "https://d-92670a617c.awsapps.com/start" | pbcopy
+echo "SSO Start URL copied to clipboard."
+aws configure sso --profile $1
+aws configure --profile $1
+export AWS_PROFILE=$1
+aws configure sso
+}
+
+aws_config_ref () {
+/usr/bin/open -a "/Applications/Google Chrome.app" "https://awscli.amazonaws.com/v2/documentation/api/latest/reference/$1/index.html"
+}

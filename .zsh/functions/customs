@@ -1,0 +1,29 @@
+function dump_note() {
+  cat ~/notes/$(date '+%Y%m%d')
+}
+
+function note() {
+  vim ~/notes/$(date '+%Y%m%d')
+}
+
+function gh_login() {
+ git config --global user.email "davidcolinsmith@gmail.com"
+ git config --global user.name "davidcolinsmith"
+}
+
+function gl_login() {
+ git config --global user.email "colin.smith@smartsheet.com"
+ git config --global user.name "csmith"
+}
+
+function pydev() {
+ fswatch -o $1 | xargs -n1 -I{} $1
+}
+
+function pp_json() {
+python -m json.tool $1
+}
+
+function wifi_check() {
+watch -n 5 '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | sed "s/c:51:1:ec:fe:4d/bedroom/g" | grep "Ctl\|Rate\|SSID"'
+}
