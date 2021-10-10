@@ -3,8 +3,8 @@ plugins=(aws python git git-extras brew history kubectl history-substring-search
 
 source $ZSH/oh-my-zsh.sh
 
-for function in ~/.zsh/functions/*; do
-  source $function
+for custom in ~/.zsh/customs/*; do
+  source $custom
 done
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
