@@ -9,6 +9,3 @@ done
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# k8s
-[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
