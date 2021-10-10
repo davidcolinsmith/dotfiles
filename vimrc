@@ -1,5 +1,9 @@
 set encoding=utf-8
 
+# Append dotfiles folder location
+set runtimepath=~/.vim,/usr/local/share/vim/vimfiles,/usr/local/share/vim/vim82,/usr/local/share/vim/vim82/pack/dist/opt/matchit,/usr/local/share/vim/vimfiles/after,~/dotfiles/.vim/after
+set packpath=~/.vim,/usr/local/share/vim/vimfiles,/usr/local/share/vim/vim82,/usr/local/share/vim/vim82/pack/dist/opt/matchit,/usr/local/share/vim/vimfiles/after,~/dotfiles/vim/after
+
 " Leader
 let mapleader = " "
 
