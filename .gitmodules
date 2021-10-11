@@ -1,9 +1,12 @@
-[submodule "vim/pack/plugins/start/nerdtree"]
-	path = vim/pack/plugins/start/nerdtree
+[submodule "vim/pack/look/start/vim-airline"]
+	path = vim/pack/look/start/vim-airline
+	url = https://github.com/vim-airline/vim-airline.git
+[submodule "vim/pack/function/start/nerdtree"]
+	path = vim/pack/function/start/nerdtree
 	url = https://github.com/scrooloose/nerdtree
-[submodule "vim/pack/plugins/start/nerdtree-git-plugin"]
-	path = vim/pack/plugins/start/nerdtree-git-plugin
+[submodule "vim/pack/function/start/nerdtree-git-plugin"]
+	path = vim/pack/function/start/nerdtree-git-plugin
 	url = https://github.com/Xuyuanp/nerdtree-git-plugin
-[submodule "vim/pack/colors/start/one"]
-	path = vim/pack/colors/start/one
+[submodule "vim/pack/look/start/one"]
+	path = vim/pack/look/start/one
 	url = https://github.com/rakr/vim-one.git
