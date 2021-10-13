@@ -13,3 +13,6 @@
 [submodule "vim/pack/syntax/start/syntastic"]
 	path = vim/pack/syntax/start/syntastic
 	url = https://github.com/vim-syntastic/syntastic.git
+[submodule "vim/pack/function/function/FastFold"]
+	path = vim/pack/function/function/FastFold
+	url = https://github.com/FastFold/FastFold.git
