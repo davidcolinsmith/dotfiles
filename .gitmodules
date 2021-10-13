@@ -10,3 +10,6 @@
 [submodule "vim/pack/look/start/one"]
 	path = vim/pack/look/start/one
 	url = https://github.com/rakr/vim-one.git
+[submodule "vim/pack/syntax/start/syntastic"]
+	path = vim/pack/syntax/start/syntastic
+	url = https://github.com/vim-syntastic/syntastic.git
