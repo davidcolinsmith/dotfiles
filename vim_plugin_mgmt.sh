@@ -12,7 +12,7 @@ function install_vim_plugin {
   git submodule init
   git submodule add https://github.com/$1/$1.git vim/pack/$type/$load/$1
   git add vim/pack/$type/$load/$1
-  git commit
+  git commit -am "adding vim plugin $plugin"
 }
 
 # Update plugin
