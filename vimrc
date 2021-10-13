@@ -1,16 +1,13 @@
 set encoding=utf-8
 
 " Append dotfiles folder location
-set runtimepath=~/.vim,/usr/local/share/vim/vimfiles,/usr/local/share/vim/vim82,/usr/local/share/vim/vim82/pack/dist/opt/matchit,/usr/local/share/vim/vimfiles/after,~/dotfiles/.vim/after
-set packpath=~/.vim,/usr/local/share/vim/vimfiles,/usr/local/share/vim/vim82,/usr/local/share/vim/vim82/pack/dist/opt/matchit,/usr/local/share/vim/vimfiles/after,~/dotfiles/vim/after
+" set runtimepath=
+" set packpath=
 
 " Leader
 let mapleader = " "
 
 set backspace=2   " Backspace deletes like most programs in insert mode
-set nobackup
-set nowritebackup
-set noswapfile    " http://robots.thoughtbot.com/post/18739402579/global-gitignore#comment-458413287
 set history=50
 set ruler         " show the cursor position all the time
 set showcmd       " display incomplete commands
@@ -26,16 +23,39 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
 endif
 
-if filereadable(expand("~/.vimrc.bundles"))
-  source ~/.vimrc.bundles
-endif
-
 " Load matchit.vim, but only if the user hasn't installed a newer version.
-if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-  runtime! macros/matchit.vim
-endif
+" if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+"   runtime! macros/matchit.vim
+" endif
 
 filetype plugin indent on
+
+" Folding
+setlocal foldmethod=syntax
+
+" folding remap of spacebar to za
+nnoremap <Space> za
+vnoremap <Space> za
+
+" maps `//` to search for current visual highlight
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
+
+" Python folding
+let g:SimpylFold_docstring_preview = 1
+
+" Fastfold folding
+let g:markdown_folding = 1
+let g:tex_fold_enabled = 1
+let g:vimsyn_folding = 'af'
+let g:xml_syntax_folding = 1
+let g:javaScript_fold = 1
+let g:sh_fold_enabled= 7
+let g:ruby_fold = 1
+let g:perl_fold = 1
+let g:perl_fold_blocks = 1
+let g:r_syntax_folding = 1
+let g:rust_fold = 1
+let g:php_folding = 1
 
 augroup vimrcEx
   autocmd!
@@ -65,9 +85,10 @@ augroup END
 " shell for syntax highlighting purposes.
 let g:is_posix = 1
 
-" Softtabs, 2 spaces
-set tabstop=2
-set shiftwidth=2
+" default tab/indent
+set smartindent
+set tabstop=4
+set shiftwidth=4
 set shiftround
 set expandtab
 
@@ -97,7 +118,7 @@ set colorcolumn=+1
 
 " Numbers
 set number
-set numberwidth=5
+set numberwidth=4
 
 " Tab completion
 " will insert tab at beginning of line,
